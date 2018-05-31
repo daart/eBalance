@@ -5,8 +5,9 @@ const { DEV_PORT } = process.env;
 
 (async () => {
   try {
-    await db.sequelize.sync();
-    // .sync({ force: true, logging: false })
+    await db.sequelize
+      .sync();
+      // .sync({ force: true, logging: false })
     
     console.log("Connection has been established successfully.");
 

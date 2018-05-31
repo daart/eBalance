@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-import validationErrors from './../errors/validation';
-import keys from './../../config/keys';
+import formatValidationErrors from './../../utils/formatValidationErrors';
+
 import db from './../../db/models';
 
 const { User } = db;
@@ -57,7 +57,7 @@ export const register = async (req, res) => {
       error.name === "SequelizeValidationError" ||
       error.name === "SequelizeUniqueConstraintError"
     ) {
-      res.json({ errors: validationErrors(error.errors) });
+      res.json({ errors: formatValidationErrors(error.errors) });
     } else {
       console.log(error);
       res.status(500).json({ msg: "Smth went wrong" });

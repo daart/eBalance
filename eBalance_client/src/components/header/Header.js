@@ -25,10 +25,11 @@ const Header = ({ isAuthenticated, user, logout, history }) => {
           {
             isAuthenticated ? (
               <div className="right menu">
-                <NavLink activeClassName="yellow active" className="item" to="/dashboard">Dashboard</NavLink>
-                <NavLink activeClassName="yellow active" className="item" to="/categories">Categories</NavLink>
-                <NavLink activeClassName="yellow active" className="item" to="/private">Private</NavLink>
+                <NavLink activeClassName="yellow active" className="item" to="/income" exact>Income</NavLink>
+                <NavLink activeClassName="yellow active" className="item" to="/transfer">Transfer</NavLink>
+                <NavLink activeClassName="yellow active" className="item" to="/expense">Expense</NavLink>
               </div>
+
             ) : (
               <div className="right menu">
                 <NavLink activeClassName="yellow active" className="item" to="/login">Login</NavLink>

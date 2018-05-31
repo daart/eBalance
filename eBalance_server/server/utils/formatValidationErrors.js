@@ -1,4 +1,4 @@
-const validationErrors = errors => (
+const formatValidationErrors = errors => (
   errors.reduce((fields, error) => {
     if (fields[error.path]) {
       fields[error.path].push(error.message);
@@ -10,4 +10,4 @@ const validationErrors = errors => (
   }, {})
 );
 
-export default validationErrors;
+export default formatValidationErrors;

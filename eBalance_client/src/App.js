@@ -2,18 +2,22 @@ import React, { Component } from "react";
 import { Switch, Route, withRouter } from "react-router-dom";
 import axios from "axios";
 import { connect } from "react-redux";
-import { Segment, Dimmer, Loader, Container } from "semantic-ui-react";
+import { Container, Grid, Responsive, Segment } from "semantic-ui-react";
 
 import { login, logout } from "./actions/auth";
 
+import './App.css';
 import Home from "./components/home/Home";
 import Login from "./components/form/Login";
 import Register from "./components/form/Register";
+// import CreateAccount from './components/form/CreateAccount';
 import Header from "./components/header/Header";
 import Dashboard from "./components/dashboard/Dashboard";
 import PrivateRoute from "./components/common/PrivateRoute";
+import SideBar from './components/common/SideBar';
 import Categories from "./components/categories/Categories";
-// import Classified from "./components/common/Classified";
+import Spinner from './components/spinner/Spinner';
+import Classified from "./components/common/Classified";
 
 class App extends Component {
   state = {
@@ -78,28 +82,46 @@ class App extends Component {
 
   render() {
     const { isLoading } = this.state;
-    // const { isAuthenticated, user } = this.props;
+    const { isAuthenticated } = this.props;
 
-    return !isLoading ? (
-      <Container>
-        <Header />
+    return (
+      <div className="l_layout">
+          {
+            !isLoading ? (
+              <div>
+                <Grid container stackable>
+                  <Grid.Row>
+                    <Grid.Column>
+                      <Header />
+                    </Grid.Column>
+                  </Grid.Row>
 
-        <Switch>
-          <Route exact path="/" component={ Home } />
-          <Route path="/register" component={ Register } />
-          <Route path="/login" component={ Login } />
-          <Route path="/about" component={() => <div>about</div>} />
-          <PrivateRoute path="/dashboard" component={ Dashboard } />
-          <PrivateRoute path="/categories" component={ Categories } />
-        </Switch>
-      </Container>
-    ) : (
-      <Segment>
-        <Dimmer active>
-          <Loader size="massive">Loading</Loader>
-        </Dimmer>
-      </Segment>
-    );
+                  <Grid.Row >
+                    <Grid.Column width={ isAuthenticated ? 3 : 0 }>
+                    {
+                      isAuthenticated ? <SideBar /> : ''
+                    } 
+                    </Grid.Column>
+                    <Grid.Column width={ isAuthenticated ? 13 : 16 }>
+                      <Switch>
+                        <Route path="/" component={ Home } exact />
+                        <Route path="/register" component={ Register } />
+                        <Route path="/login" component={ Login } />
+                        <Route path="/about" component={() => <div>about</div>} />
+                        <PrivateRoute path="/dashboard" component={ Dashboard } />
+                        <PrivateRoute path="/categories" component={ Categories } />
+                        <PrivateRoute path="/private" component={ Classified } />
+                      </Switch>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+              </div>
+            ) : (
+              <Spinner />
+            )
+          }
+      </div>
+    )
   }
 }
 
