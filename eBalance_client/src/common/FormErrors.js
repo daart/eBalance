@@ -1,8 +1,7 @@
 import React from "react";
-
 import { Message } from 'semantic-ui-react';
 
-const Errors = ({ errors = [] }) => (
+const FormErrors = ({ errors = [] }) => (
   <div className="l_form_fielderror">
     {
       errors.length ? (<Message color='orange'>
@@ -14,4 +13,4 @@ const Errors = ({ errors = [] }) => (
   </div>
 );
 
-export default Errors;
+export default FormErrors;

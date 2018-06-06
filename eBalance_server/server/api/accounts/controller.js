@@ -32,14 +32,13 @@ export const updateOne = async(req, res) => {
     const { id } = req.params;
 
     try {
-        const updatedAccount = await Account.update({
-          where: id
-        }, {
+        let account = await Account.findById(id);
+        let updatedAccount = await account.update({
             title,
             balance,
-        })
+        });
 
-        res.status(200);
+        res.status(200).json({ account: updatedAccount });
 
     } catch (error) {
         res.status(400).json({ error });
@@ -49,23 +48,36 @@ export const updateOne = async(req, res) => {
 export const deleteOne = async(req, res) => {
     const { id } = req.params;
 
-    console.log('req param ID -> ', id);
     try {
-        let account = await Account.destroy({ where: { id } });
+        let account = await Account.findById(id);
+        let updatedAccount = await account.update({ deleted: true });
 
-        res.json({ deleted: true, account });
+        res.json({ deleted: true });
     } catch ({ errors }) {
         res.json({ deleted: errors })
     }
 };
 
 export const getAll = async(req, res) => {
+    const userId = req.user_id;
+
     try {
-        const accounts = await Account.findAll();
-
+        const accounts = await Account.findAll({ where: { userId, deleted: false }});
+        
         res.status(200).json({ accounts });
-
     } catch ({ error }) {
         res.status(400).json({ error });
+    }
+};
+
+export const getOne = async(req, res) => {
+  const { id } = req.params;
+
+    try {
+      const account = await Account.findById(id);
+
+      res.status(200).json({ account });
+    } catch ({ error }) {
+      res.status(400).json({ error });
     }
 };

@@ -9,12 +9,18 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [4, 20]
+        notEmpty: {
+          msg: "is Required!"
+        }
       }
     },
     balance: {
       type: DataTypes.INTEGER,
       defaultValue: 0
+    },
+    deleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   });
 

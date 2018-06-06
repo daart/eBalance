@@ -1,23 +1,25 @@
 import React from "react";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
-import { connect } from 'react-redux';
 
-import Form from "./Form";
+import Form from "./../common/Form";
 
 const Register = ({ auth, history, register }) => {
   const fields = [
     {
       name: "email",
-      type: "email"
+      type: "email",
+      value: ""
     },
     {
       name: "login",
-      type: "text"
+      type: "text",
+      value: ""
     },
     {
       name: "password",
-      type: "password"
+      type: "password",
+      value: ""
     }
   ];
 
@@ -39,4 +41,4 @@ const Register = ({ auth, history, register }) => {
   return <Form fields={fields} submitHandler={submitHandler} history={history}/>;
 };
 
-export default withRouter(connect()(Register));
+export default withRouter(Register);

@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink, Link, withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 
-import { logout } from './../../actions/auth';
+import { logout } from './../actions/auth';
 
 const Header = ({ isAuthenticated, user, logout, history }) => {
   return (
@@ -11,7 +11,7 @@ const Header = ({ isAuthenticated, user, logout, history }) => {
         <div className="ui olive inverted borderless menu">
           <div className="left menu">
               <h2 className="ui header">
-                <Link to="/"><i aria-hidden="true" className="money bill alternate outline icon"></i></Link>
+                <Link to={ isAuthenticated ? '/dashboard' : '/' }><i aria-hidden="true" className="money bill alternate outline icon"></i></Link>
                 <div className="content">Kuzman.io
                   <div className="sub header">Manage your finances wisely</div>
                 </div>
@@ -49,5 +49,3 @@ const mapStateToProps = ({ auth }) => ({
 });
 
 export default withRouter(connect(mapStateToProps, { logout })(Header));
-
-// (<NavLink activeClassName="yellow active" className="item" to="/login" >Login</NavLink>)

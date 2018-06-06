@@ -1,12 +1,16 @@
 import express from 'express';
 
-import { createOne, getAll, deleteOne, updateOne } from './controller';
+import { createOne, getAll, getOne, deleteOne, updateOne } from './controller';
 
 const router = express.Router();
 
-router.use('/create', createOne);
-router.use('/:id', deleteOne);
-router.use('/:id', updateOne);
-router.use('/', getAll);
+router.route('/')
+  .get(getAll)
+  .post(createOne);
+
+router.route('/:id')
+  .get(getOne)
+  .patch(updateOne)
+  .delete(deleteOne);
 
 export default router;

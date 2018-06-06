@@ -1,3 +1,7 @@
 .l_layout {
   height: 100%;
 }
+
+.ui.page.modals.transition.visible {
+  display: flex !important;
+}

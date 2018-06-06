@@ -3,19 +3,22 @@ import axios from "axios";
 import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 
-import { login } from './../../actions/auth';
-import Form from "./Form";
+import { login } from './../actions/auth';
+import { getAll } from './../actions/accounts';
+import Form from "./../common/Form";
 
-const Login = ({ history, login, location }) => {
+const Login = ({ history, location, login, getAll }) => {
 
   const fields = [
     {
       name: "email",
-      type: "email"
+      type: "email",
+      value: ""
     },
     {
       name: "password",
-      type: "password"
+      type: "password",
+      value: ""
     }
   ];
 
@@ -32,10 +35,12 @@ const Login = ({ history, login, location }) => {
 
     const { token } = serverResponse.data;
     const { from } = location.state || { from: { pathname: "/dashboard" } };
-
+    
     login(token);
+    // getAll();
 
-    console.log(`Congrats, you've successfully logged in!`, 'history ', history, ' location ', location);
+    console.log(`Congrats, you've successfully logged in!`, 'history ', history, ' location ', location, ' here are your accounts =====::: ');
+    
     history.replace(from);
     return null;
   };
@@ -43,10 +48,4 @@ const Login = ({ history, login, location }) => {
   return <Form fields={fields} submitHandler={submitHandler} />;
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  login(token) {
-    dispatch(login(token))
-  }
-});
-
-export default withRouter(connect(null, mapDispatchToProps)(Login));
+export default withRouter(connect(null, { login, getAll })(Login));

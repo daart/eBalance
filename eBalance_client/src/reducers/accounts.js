@@ -1,12 +1,9 @@
 import {
   ACCOUNTS_GET_ALL,
   ACCOUNT_CREATE,
+  ACCOUNT_UPDATE,
+  ACCOUNT_DELETE,
 } from './../actions/types';
-
-import {
-  createOne,
-  getAll,
-} from './../actions/accounts';
 
 const accounts = (state = [], { type, payload }) => {
   switch(type) {
@@ -16,10 +13,17 @@ const accounts = (state = [], { type, payload }) => {
         ...state,
         payload
       ];
+    
+    case ACCOUNT_UPDATE:
+      return state.map(account => account.id === payload.id ? payload : account);
+
+    case ACCOUNT_DELETE:
+      return state.filter(account => account.id !== payload);
+    
     case ACCOUNTS_GET_ALL:
 
-      return state;
-      
+      return payload;
+    
     default:
       return state;
   }

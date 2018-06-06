@@ -1,12 +1,7 @@
 import React from "react";
 import { Grid, Tab } from 'semantic-ui-react';
 
-import CreateAccount from './../form/CreateAccount';
-import UpdateAccount from './../form/UpdateAccount';
-
-import SideBar from './../common/SideBar';
-
-import AccountList from './../../components/accounts/AccountList';
+import AccountList from './../components/AccountList';
 
 const panes = [
   { menuItem: 'Income', render: () => (
@@ -22,7 +17,7 @@ const Dashboard = () => {
     <div className="l_dashboard"> 
       <Grid>
         <Grid.Row>
-          <Grid.Column width="4">
+          <Grid.Column width="4" stretched>
             Dashboard!
             <AccountList />
           </Grid.Column>

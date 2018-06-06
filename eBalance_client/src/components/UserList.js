@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import UserItem from './../user/UserItem';
+import UserItem from './UserItem';
 
 class UserList extends Component {
   state = {

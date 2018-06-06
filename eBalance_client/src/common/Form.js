@@ -1,16 +1,14 @@
 import React, { Component } from "react";
 import { Button, Form } from 'semantic-ui-react';
-import { connect } from 'react-redux';
-// import { withRouter } from 'router';
 
-import Errors from "./Errors";
+import FormErrors from "./FormErrors";
 
 class FormComponent extends Component {
   state = {
     errors: {},
     inputValues:
       this.props.fields.reduce((fields, currentField) => {
-        fields[currentField.name] = "";
+        fields[currentField.name] = currentField.value;
         return fields;
       }, {}) || {}
   };
@@ -76,7 +74,8 @@ class FormComponent extends Component {
                     value={inputValues[name]}
                   />
                 </Form.Field>
-                <Errors errors={errors[name]}></Errors>
+                
+                <FormErrors errors={errors[name]} />
               </div>
             );
           })
@@ -87,4 +86,4 @@ class FormComponent extends Component {
   }
 }
 
-export default connect()(FormComponent);
+export default FormComponent;
