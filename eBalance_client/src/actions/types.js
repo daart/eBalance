@@ -9,3 +9,6 @@ export const ACCOUNT_GET_ONE = 'ACCOUNT_GET_ONE';
 export const ACCOUNT_UPDATE = 'ACCOUNT_UPDATE';
 export const ACCOUNT_DELETE = 'ACCOUNT_DELETE';
 export const ACCOUNT_GET = 'ACCOUNT_GET';
+export const APP_READY = 'APP_READY';
+export const APP_NOT_READY = 'APP_NOT_READY';
+

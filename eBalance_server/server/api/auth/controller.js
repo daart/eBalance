@@ -39,7 +39,7 @@ export const login = async (req, res) => {
     let { email, login, id } = userFound;
     let payload = { login, email, id };
 
-    jwt.sign(payload, JWT_SECRET, { expiresIn: 1200 }, (err, token) => {
+    jwt.sign(payload, JWT_SECRET, { expiresIn: "120s" }, (err, token) => {
       return res.json({
         token
       });
@@ -66,8 +66,8 @@ export const register = async (req, res) => {
 }
 
 export const validateToken = async (req, res) => {
-  let token = req.body.token;
-
+  let { token } = req.body;
+  
   if (!token) {
     return res.json({ valid: false });
   }

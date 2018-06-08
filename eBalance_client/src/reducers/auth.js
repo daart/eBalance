@@ -28,7 +28,7 @@ const auth = (state = initialState, { type, payload }) => {
     case LOGIN:
     {
       let { token } = payload;
-
+      
       return {
         isAuthenticated: true,
         token: token,

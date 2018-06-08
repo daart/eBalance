@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Header } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
-import { deleteOne, updateOne } from './../actions/accounts';
+import { deleteOne } from './../actions/accounts';
 
 import Confirmation from './../common/Confirm';
 import Modal from './../common/Modal';
@@ -14,7 +13,7 @@ let editAccountBtnConfig = {
   txt: "Edit"
 };
 
-const AccountItem = ({ account, removeAccount, editAccount, showControls }) => {
+const AccountItem = ({ account, removeAccount, showControls }) => {
   const { title, balance, id } = account;
 
   return (

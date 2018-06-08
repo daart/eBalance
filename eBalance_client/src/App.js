@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { Switch, Route, withRouter } from "react-router-dom";
 import axios from "axios";
 import { connect } from "react-redux";
-import { Container, Grid, Responsive, Segment } from "semantic-ui-react";
+import { Grid } from "semantic-ui-react";
 
-import { login, logout } from "./actions/auth";
+import { tryToLogin, logout } from "./actions/auth";
 import { getAll } from './actions/accounts';
 
 import './App.css';
@@ -23,18 +23,12 @@ import PrivateRoute from "./common/PrivateRoute";
 import Spinner from './common/Spinner';
 
 class App extends Component {
-  state = {
-    isLoading: true,
-    isAppReady: false,
-  };
-
   responceInterCeptor = axios.interceptors.response.use(
     res => {
       return res;
     },
     err => {
       if (err.response.status === 401) {
-        console.log("ctx --> ", this);
         this.handle401();
       }
       return Promise.reject(err);
@@ -42,67 +36,21 @@ class App extends Component {
   );
 
   handle401() {
-    const { logout } = this.props;
-
-    logout();
+    this.props.logout();
   }
 
   async componentDidMount() {
-    const token = localStorage.getItem("token");
-    const { logout, getAll } = this.props;
-    
-    if (!token) {
-      logout();
-      this.setState({
-        isLoading: false
-      });
-
-      return;
-    }
-
-    await this.validateToken(token);
-
-    
-    console.log('is App Ready ? ' , this.state.isAppReady);
-    
-    if (this.state.isAppReady) {
-      console.log('are we at least getting here ? ');
-
-      await getAll();
-    }
-  }
-
-  async validateToken(token) {
-    const { login, logout } = this.props;
-    const res = await axios.post("http://localhost:2345/api/auth/validateToken", {
-      token
-    });
-
-    const { valid } = res.data;
-
-    if (!valid) {
-      logout();
-      this.setState({
-        isLoading: false,
-        isAppReady: false,
-      });
-    } else {
-      login(token);
-      this.setState({
-        isLoading: false,
-        isAppReady: true,
-      });
-    }
+    console.log('try to login');
+    await this.props.tryToLogin();
   }
 
   render() {
-    const { isLoading } = this.state;
-    const { isAuthenticated } = this.props;
+    const { isAuthenticated, isAppReady } = this.props;
 
     return (
       <div className="l_layout">
           {
-            !isLoading ? (
+            isAppReady ? (
               <Grid 
                 container 
               >
@@ -113,9 +61,7 @@ class App extends Component {
                 </Grid.Row>
 
                 <Grid.Row columns="equal">
-                  
-                  {
-                    
+                  { 
                     isAuthenticated && <Grid.Column width="3"><SideBar /></Grid.Column>
                   }
 
@@ -153,9 +99,10 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = ({ auth }) => ({
+const mapStateToProps = ({ auth, app }) => ({
   isAuthenticated: auth.isAuthenticated,
-  user: auth.user
+  user: auth.user,
+  isAppReady: app.isAppReady,
 });
 
-export default withRouter(connect(mapStateToProps, { login, logout, getAll })(App));
+export default withRouter(connect(mapStateToProps, { tryToLogin, logout })(App));

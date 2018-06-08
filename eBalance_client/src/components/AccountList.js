@@ -1,13 +1,9 @@
-import React, { Component } from "react";
-import axios from "axios";
+import React from "react";
 import { connect } from 'react-redux';
-import { Button } from "semantic-ui-react";
 
 import AccountItem from "./AccountItem";
 import AccountForm from "./AccountForm";
 import Modal from './../common/Modal';
-
-import { getAll } from './../actions/accounts';
 
 let createNewAccountBtnConfig = {
   color: "green",

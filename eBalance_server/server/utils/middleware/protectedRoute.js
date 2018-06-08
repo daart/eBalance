@@ -11,8 +11,6 @@ const protectedRoute = async (req, res, next) => {
         return res.status(401).json({ error: "unauthorized" });
       } else {
 
-        // console.log('decoded >>> ', decoded);
-        
         req.user_id = decoded.id
         next()
       }
