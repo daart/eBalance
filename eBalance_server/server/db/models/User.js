@@ -64,6 +64,15 @@ export default (sequelize, DataTypes) => {
         }
       }
     );
+    
+    User.hasMany(
+      models.Category, {
+        foreignKey: {
+          name: 'userId',
+          field: 'user_id',
+        }
+      }
+    );
   }
   
   return User;

@@ -11,7 +11,7 @@ import {
 export const getAll = () => async dispatch => {
   const apiResponse = await axios.get('http://localhost:2345/api/accounts');
   const { accounts } = apiResponse.data;
-
+  console.log('accounts Thunk ! --=->', accounts);
   dispatch({ type: ACCOUNTS_GET_ALL, payload: accounts });
 
   return Promise.resolve();

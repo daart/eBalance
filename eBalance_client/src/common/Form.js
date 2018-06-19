@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Form } from 'semantic-ui-react';
+import { Button, Form, Checkbox } from 'semantic-ui-react';
 
 import FormErrors from "./FormErrors";
 
@@ -53,6 +53,52 @@ class FormComponent extends Component {
     }
   };
 
+  onRadioChangeHandler = (e, data) => {
+    const { name, value } = data;
+    let { inputValues } = this.state;
+
+    this.setState({
+      inputValues: {
+        ...inputValues,
+        [name]: value
+      }
+    })
+  }
+
+  renderFormField = (field) => {
+    const { name, type, options } = field;
+    const { inputValues } = this.state;
+    const { inputHandler, onRadioChangeHandler } = this;
+
+    switch(type) {
+      case 'radio':
+        return options.map((option, index) => (
+          <Checkbox
+            radio
+            key={index}
+            label={option}
+            name={name}
+            value={option}
+            checked={ inputValues[name] === option}
+            onChange={onRadioChangeHandler}
+          />
+        ));
+      default:
+        return (
+          <div>
+            <label htmlFor={name}>{name}</label>
+            <input
+              name={name}
+              type={type}
+              onChange={inputHandler}
+              value={inputValues[name]}
+            />
+          </div>
+        )
+    }
+
+  };
+
   render() {
     const { fields, inputHandler, formHandler } = this;
     const { inputValues, errors } = this.state;
@@ -61,20 +107,16 @@ class FormComponent extends Component {
       <Form onSubmit={formHandler} >
         {
           fields.map((field, index) => {
-            const { name, type } = field;
-
+            const { name } = field;
+            
             return (
               <div key={index} >
                 <Form.Field error={!!errors[name]}>
-                  <label htmlFor={name}>{name}</label>
-                  <input 
-                    name={name}
-                    type={type}
-                    onChange={inputHandler}
-                    value={inputValues[name]}
-                  />
+                  {
+                    this.renderFormField(field)
+                  }
                 </Form.Field>
-                
+
                 <FormErrors errors={errors[name]} />
               </div>
             );

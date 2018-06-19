@@ -1,8 +1,16 @@
 import axios from 'axios';
 
 import { LOGOUT, LOGIN, VALIDATE_TOKEN } from './types';
-import { getAll } from './accounts';
+import { getAll as getAllAccounts } from './accounts';
+import { getAll as getAllCategories } from './categories';
 import { setReady, unsetReady } from './app';
+
+export const fetchUserData = () => dispatch => {
+  return Promise.all[
+    dispatch(getAllAccounts()),
+    dispatch(getAllCategories())
+  ];
+}
 
 export const login = (token) => (dispatch) => {
   localStorage.setItem('token', token);
@@ -20,9 +28,12 @@ export const login = (token) => (dispatch) => {
   // for example dispatch(fetchUserData())
   // Promise.all([getAllAccounts(), getAllCategories()]) etc
 
+  // return dispatch(fetchUserData());
+  dispatch(getAllAccounts());
+  dispatch(getAllCategories());
   // for now its just fetchAccounts
   // console.log('fetching user data');
-  return dispatch(getAll());
+  // return dispatch(getAll());
 
 };
 

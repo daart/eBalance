@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { getOne } from './../actions/accounts';
 
 const Account = ({ match, getAccount, accounts }) => {
-  const account = accounts.find(account => account.id === match.params.id);
+  const account = accounts.find(account => account.id === match.params.id) || {};
 
   return (
     <div className="">

@@ -14,7 +14,9 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
 
 const db = {
   User: sequelize.import(path.join(__dirname, "/User")),
-  Account: sequelize.import(path.join(__dirname, "/Account"))
+  Account: sequelize.import(path.join(__dirname, "/Account")),
+  Category: sequelize.import(path.join(__dirname, "/Category")),
+  // Transaction: sequelize.import(path.join(__dirname, "/Transaction"))
 };
 
 Object.keys(db).forEach(modelName => {

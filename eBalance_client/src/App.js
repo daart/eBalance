@@ -15,6 +15,8 @@ import Register from "./screens/Register";
 import Dashboard from "./screens/Dashboard";
 import Accounts from "./screens/Accounts";
 import Account from "./screens/Account";
+import Categories from './screens/Categories';
+import Category from './screens/Category';
 
 import Header from "./components/Header";
 import SideBar from './components/SideBar';
@@ -72,7 +74,8 @@ class App extends Component {
                       <Route path="/login" component={ Login } />
                       <Route path="/about" component={() => <div>about</div>} />
                       <PrivateRoute path="/dashboard" component={ Dashboard } />
-                      <PrivateRoute path="/categories" component={ () => <div>@Categories</div> } />
+                      <PrivateRoute path="/categories/:id" component={() => <div>@Category Info <Category /> </div> } />
+                      <PrivateRoute path="/categories" component={() => <div>@Categories <Categories /> </div> } />
                       <PrivateRoute path="/accounts/:id" component={ Account } />
                       <PrivateRoute path="/accounts" component={ Accounts } />
                       <PrivateRoute path="/income" component={ () => <div>@income</div> } />
