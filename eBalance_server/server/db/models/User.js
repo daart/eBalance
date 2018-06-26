@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 
 export default (sequelize, DataTypes) => {
   const User = sequelize.define(
-    "user",
+    "users",
     {
       id: {
         primaryKey: true,
@@ -55,25 +55,25 @@ export default (sequelize, DataTypes) => {
     }
   );
 
-  User.associate = (models) => {
-    User.hasMany(
-      models.Account, {
-        foreignKey: {
-          name: 'userId',
-          field: 'user_id',
-        }
-      }
-    );
+  // User.associate = (models) => {
+  //   User.hasMany(
+  //     models.Account, {
+  //       foreignKey: {
+  //         name: 'userId',
+  //         field: 'user_id',
+  //       }
+  //     }
+  //   );
     
-    User.hasMany(
-      models.Category, {
-        foreignKey: {
-          name: 'userId',
-          field: 'user_id',
-        }
-      }
-    );
-  }
+  //   User.hasMany(
+  //     models.Category, {
+  //       foreignKey: {
+  //         name: 'userId',
+  //         field: 'user_id',
+  //       }
+  //     }
+  //   );
+  // }
   
   return User;
 };

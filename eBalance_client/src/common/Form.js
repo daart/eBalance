@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Form, Checkbox } from 'semantic-ui-react';
+import { Button, Form, Checkbox, Dropdown } from 'semantic-ui-react';
 
 import FormErrors from "./FormErrors";
 
@@ -15,9 +15,11 @@ class FormComponent extends Component {
 
   fields = this.props.fields;
 
-  inputHandler = e => {
-    const { name, value } = e.target;
+  inputHandler = (e, data) => {
+    const { name, value } = data ? data : e.target;
     const { inputValues } = this.state;
+
+    console.log('Dropdown val ===> ', value);
 
     this.setState({
       inputValues: {
@@ -53,24 +55,22 @@ class FormComponent extends Component {
     }
   };
 
-  onRadioChangeHandler = (e, data) => {
-    const { name, value } = data;
-    let { inputValues } = this.state;
-
-    this.setState({
-      inputValues: {
-        ...inputValues,
-        [name]: value
-      }
-    })
-  }
-
   renderFormField = (field) => {
-    const { name, type, options } = field;
+    const { name, type, options, placeholder } = field;
     const { inputValues } = this.state;
-    const { inputHandler, onRadioChangeHandler } = this;
+    const { inputHandler } = this;
 
     switch(type) {
+      case 'select': 
+        return <Dropdown 
+          name={name}
+          selection
+          placeholder={placeholder}
+          options={options} 
+          onChange={inputHandler}
+          value={inputValues[name]}
+        />
+
       case 'radio':
         return options.map((option, index) => (
           <Checkbox
@@ -80,7 +80,7 @@ class FormComponent extends Component {
             name={name}
             value={option}
             checked={ inputValues[name] === option}
-            onChange={onRadioChangeHandler}
+            onChange={inputHandler}
           />
         ));
       default:
@@ -88,6 +88,7 @@ class FormComponent extends Component {
           <div>
             <label htmlFor={name}>{name}</label>
             <input
+              placeholder={placeholder}
               name={name}
               type={type}
               onChange={inputHandler}
@@ -103,6 +104,7 @@ class FormComponent extends Component {
     const { fields, inputHandler, formHandler } = this;
     const { inputValues, errors } = this.state;
     
+    console.log("form state -> ", inputValues);
     return (
       <Form onSubmit={formHandler} >
         {

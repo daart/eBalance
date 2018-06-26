@@ -7,7 +7,7 @@ import Form from "./../common/Form";
 
 import { createOne, updateOne } from './../actions/accounts';
 
-const AccountForm = ({ history, hideModal, createOne, updateOne, accounts, accountId }) => {
+const AccountForm = ({ hideModal, createOne, updateOne, accounts, itemId }) => {
   let fields = [
     {
       name: "title",
@@ -21,8 +21,8 @@ const AccountForm = ({ history, hideModal, createOne, updateOne, accounts, accou
     }
   ];
 
-  if (accountId) {
-    let account = accounts.find(a => a.id === accountId);
+  if (itemId) {
+    let account = accounts.find(a => a.id === itemId);
     
     fields.map(a => a.value = account[a.name]);
   } 
@@ -30,8 +30,8 @@ const AccountForm = ({ history, hideModal, createOne, updateOne, accounts, accou
   const submitHandler = async formData => {
     let serverResponse;
     
-    if (accountId) {
-      serverResponse = await axios.patch("http://localhost:2345/api/accounts/" + accountId, formData);
+    if (itemId) {
+      serverResponse = await axios.patch("http://localhost:2345/api/accounts/" + itemId, formData);
       let { account } = serverResponse.data;
 
       updateOne(account);

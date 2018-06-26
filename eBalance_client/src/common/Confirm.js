@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Confirm, Button } from 'semantic-ui-react';
 
 class Confirmation extends Component {
@@ -19,13 +19,26 @@ class Confirmation extends Component {
   }
 
   render() {
-    const { accountId, removeAccount } = this.props;
+    const { itemId, removeItem, btnConfig = {} } = this.props;
+    const { basic, color, icon } = btnConfig;
+
+    console.log("btnConfig >> ", btnConfig, ' props >>> ', this.props);
     return (
-      <div>
-        <Button onClick={this.open}>Delete</Button>
-        <Confirm open={this.state.open} onCancel={this.close} onConfirm={() => removeAccount(accountId)} />
-      </div>
-    )
+      <Fragment>
+        <Button 
+          basic={basic && basic} 
+          icon={icon && icon} 
+          onClick={this.open} 
+          color={color} 
+        />
+
+        <Confirm 
+          open={this.state.open} 
+          onCancel={this.close} 
+          onConfirm={() => removeItem(itemId)} 
+        />
+      </Fragment>
+    );
   }
 };
 

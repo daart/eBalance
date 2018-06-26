@@ -1,7 +1,5 @@
 export default (sequelize, DataTypes) => {
-  const categoryTypes = ['expense', 'income'];
-
-  const Category = sequelize.define("category", {
+  const Category = sequelize.define("categories", {
     id: {
       primaryKey: true,
       type: DataTypes.UUID,
@@ -18,11 +16,11 @@ export default (sequelize, DataTypes) => {
         }
       }
     },
-
-    categoryType: {
+    
+    type: {
       type: DataTypes.ENUM,
       values: ["expense", "income"],
-      defaultValue: 'expense'
+      defaultValue: "expense"
     },
 
     deleted: {
@@ -31,9 +29,10 @@ export default (sequelize, DataTypes) => {
     }
   });
 
-  Category.associate = (models) => {
-    Category.belongsTo(models.User)
-  }
+  Category.associate = models => {
+    Category.belongsTo(models.Category, { foreignKey: "parentId" });
+    Category.belongsTo(models.User);
+  };
 
   return Category;
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -10,29 +10,41 @@ import CategoryForm from './CategoryForm';
 
 let editCategoryBtnConfig = {
   color: "teal",
-  txt: "Edit"
+  icon: "edit",
+  basic: true,
+};
+
+let deleteBtnConfig = {
+  color: "red",
+  icon: "times",
+  basic: true
 };
 
 const CategoryItem = ({ category, removeCategory, showControls }) => {
   const { title, id } = category;
 
-  return (
-    <li key={id}>
+  return <li key={id}>
       <Link to={`/categories/${id}`}>
         <div className="category-title">{title}</div>
       </Link>
       <div className="category-id">{id}</div>
 
-      {
-        showControls && (
-          <div>
-            <Confirmation removeCategory={removeCategory} accountId={id} />
+      {showControls && (<div floated="right">
+          <Confirmation 
+            removeItem={removeCategory} 
+            btnConfig={deleteBtnConfig} 
+            itemId={id}
+          />
 
-          </div>
-        )
+          <Modal 
+            modalContent={CategoryForm} 
+            headerContent="Edit Account" 
+            triggerBtnConfig={editCategoryBtnConfig} 
+            itemId={id} 
+          />
+        </div>)
       }
-    </li>
-  );
+    </li>;
 };
 
 const mapDispatchToProps = (dispatch) => ({

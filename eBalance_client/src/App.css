@@ -5,3 +5,7 @@
 .ui.page.modals.transition.visible {
   display: flex !important;
 }
+
+.l_categories .ui.list .item {
+  padding-left: 15px;
+}

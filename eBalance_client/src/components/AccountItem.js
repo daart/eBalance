@@ -27,12 +27,12 @@ const AccountItem = ({ account, removeAccount, showControls }) => {
       {
         showControls && (
           <div>
-            <Confirmation removeAccount={ removeAccount } accountId={ id } />     
+            <Confirmation removeItem={ removeAccount } itemId={ id } />     
             <Modal
               modalContent={ AccountForm }
               headerContent='Edit Account'
               triggerBtnConfig={ editAccountBtnConfig }
-              accountId={ id }
+              itemId={ id }
             />
           </div>
         )

@@ -27,7 +27,7 @@ export default (sequelize, DataTypes) => {
   });
 
   Transaction.associate = (models) => {
-    Transaction.belongsTo(models.Category)
+    Transaction.belongsTo(models.User)
   }
 
   return Transaction;

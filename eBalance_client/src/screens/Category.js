@@ -6,8 +6,6 @@ import { connect } from 'react-redux';
 import CategoryItem from './../components/CategoryItem';
 import CategoryForm from './../components/CategoryForm';
 
-import { getOne } from './../actions/categories';
-
 const Category = ({ match, categories }) => {
   const category = categories.find(category => category.id === match.params.id) || {};
 

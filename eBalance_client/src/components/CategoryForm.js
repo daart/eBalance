@@ -7,37 +7,57 @@ import Form from "./../common/Form";
 
 import { createOne, updateOne } from './../actions/categories';
 
-const CategoryForm = ({ createOne, updateOne, categories, categoryId }) => {
+const CategoryForm = ({
+  hideModal,
+  createOne,
+  updateOne,
+  categories,
+  itemId
+}) => {
   let fields = [
     {
       name: "title",
       type: "text",
+      placeholder: "category title",
       value: ""
     },
     {
-      name: "categoryType",
+      name: "type",
       type: "radio",
-      options: ['income', 'expense'],
+      options: ["income", "expense"],
       value: "expense"
+    },
+    {
+      name: "categorylevel",
+      type: "select",
+      placeholder: "pick category",
+      options: categories.map(cat => ({...cat, text: cat.title, key: cat.id, value: cat.id })),
+      value: null
     }
   ];
 
-  if (categoryId) {
-    let category = categories.find(a => a.id === categoryId);
+  if (itemId) {
+    let category = categories.find(a => a.id === itemId);
 
-    fields.map(a => a.value = category[a.name]);
+    fields.map(a => (a.value = category[a.name]));
   }
 
   const submitHandler = async formData => {
     let serverResponse;
 
-    if (categoryId) {
-      serverResponse = await axios.patch("http://localhost:2345/api/categories/" + categoryId, formData);
+    if (itemId) {
+      serverResponse = await axios.patch(
+        "http://localhost:2345/api/categories/" + itemId,
+        formData
+      );
       let { category } = serverResponse.data;
 
       updateOne(category);
     } else {
-      serverResponse = await axios.post("http://localhost:2345/api/categories", formData);
+      serverResponse = await axios.post(
+        "http://localhost:2345/api/categories",
+        formData
+      );
       let { category } = serverResponse.data;
 
       createOne(category);
@@ -48,7 +68,8 @@ const CategoryForm = ({ createOne, updateOne, categories, categoryId }) => {
     if (errors) {
       return errors;
     }
-
+    
+    hideModal();
     return null;
   };
 

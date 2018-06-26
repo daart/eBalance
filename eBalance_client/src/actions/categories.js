@@ -12,9 +12,7 @@ export const getAll = () => async dispatch => {
   try {
     const apiResponse = await axios.get('http://localhost:2345/api/categories');
     const { categories } = apiResponse.data;
-    
-    console.log('CTEGORIES Thunk ! --=->', categories);
-    
+
     dispatch({ type: CATEGORIES_GET_ALL, payload: categories });
 
     return Promise.resolve(categories);

@@ -39,7 +39,7 @@ export const login = async (req, res) => {
     let { email, login, id } = userFound;
     let payload = { login, email, id };
 
-    jwt.sign(payload, JWT_SECRET, { expiresIn: "1120s" }, (err, token) => {
+    jwt.sign(payload, JWT_SECRET, { expiresIn: "120m" }, (err, token) => {
       return res.json({
         token
       });

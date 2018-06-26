@@ -1,26 +1,32 @@
-import React from "react";
+import React, { Component } from "react";
 import { Grid } from "semantic-ui-react";
+import { connect } from 'react-redux';
 
 import CategoryList from "./../components/CategoryList";
-import CategoryForm from './../components/CategoryForm';
-import CategoryGroupFilter from './../components/CategoryGroupFilter';
 
-const Categories = () => {
-  return <div className="l_categories">
-      <Grid>
-        <Grid.Row>
-          <Grid.Column width="10" stretched>
-            Categories!
-            <CategoryGroupFilter />
-          </Grid.Column>
-
-          <Grid.Column width="6">
-            @Add new Category!
-            <CategoryForm />
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-    </div>;
+class Categories extends Component {
+  render() {
+    const { categories } = this.props;
+    
+    return (
+      <div className="l_categories">
+        <CategoryList showControls={true} categories={categories} />
+      </div>
+    );
+  }
 };
 
-export default Categories;
+let nestCategories = (arr, parentId) => (
+  arr
+    .filter(upperLvlCategory => upperLvlCategory.parentId === parentId)
+    .map(lowerLvlCategory => (
+      {
+        ...lowerLvlCategory,
+        children: lowerLvlCategory.parentId === parentId ? nestCategories(arr, lowerLvlCategory.id) : []
+      }
+    ))
+);
+
+export default connect(({ categories }) => ({
+  categories: nestCategories(categories, null)
+}))(Categories);

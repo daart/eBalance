@@ -1,5 +1,5 @@
 export default (sequelize, DataTypes) => {
-  const Account = sequelize.define("account", {
+  const Account = sequelize.define("accounts", {
     id: {
       primaryKey: true,
       type: DataTypes.UUID,

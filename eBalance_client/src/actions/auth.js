@@ -14,7 +14,7 @@ export const fetchUserData = () => dispatch => {
 
 export const login = (token) => (dispatch) => {
   localStorage.setItem('token', token);
-  axios.defaults.headers.common['authorization'] = token;
+  axios.defaults.headers.common['Authorization'] = token;
 
   dispatch({
     type: LOGIN,
@@ -39,7 +39,7 @@ export const login = (token) => (dispatch) => {
 
 export const logout = () => (dispatch) => {
   localStorage.removeItem('token');
-  delete axios.defaults.headers.common['authorization'];
+  delete axios.defaults.headers.common['Authorization'];
 
   dispatch({
     type: LOGOUT
@@ -56,7 +56,7 @@ export const tryToLogin = () => async dispatch => {
       const { valid } = result.data;
 
       if (valid) {
-        console.log('token is valid, lets log in');
+        // console.log('token is valid, lets log in');
         await dispatch(login(token));
       } else {
         dispatch(logout());
@@ -67,7 +67,7 @@ export const tryToLogin = () => async dispatch => {
       return Promise.resolve();
       
     } catch (e) {
-      console.log({...e});
+      // console.log({...e});
       dispatch(setReady());
       return Promise.resolve();
     }
