@@ -19,7 +19,7 @@ class ModalDimmer extends Component {
   }
 
   render() {
-    const { modalContent: ModalContent, headerContent, triggerBtnConfig, itemId } = this.props;
+    const { modalContent: ModalContent, headerContent, triggerBtnConfig, type, itemId } = this.props;
     const { isModalActive } = this.state;
     const { color, txt, icon, basic } = triggerBtnConfig;
 
@@ -46,7 +46,11 @@ class ModalDimmer extends Component {
         <Header content={ headerContent } />
         <Modal.Content>
           <p>Some Content</p>
-          <ModalContent hideModal={ this.hideModal } itemId={ itemId } />
+          <ModalContent 
+            type={type} 
+            hideModal={ this.hideModal } 
+            itemId={ itemId } 
+          />
         </Modal.Content>
       </Modal>
     )

@@ -31,14 +31,11 @@ export const createOne = async (req, res) => {
 };
 
 export const updateOne = async (req, res) => {
-  const { title } = req.body;
   const { id } = req.params;
 
   try {
     let category = await Category.findById(id);
-    let updatedCategory = await category.update({
-      title,
-    });
+    let updatedCategory = await category.update(req.body);
 
     res.status(200).json({ category: updatedCategory });
 

@@ -9,11 +9,14 @@ import { createOne, updateOne } from './../actions/categories';
 
 const CategoryForm = ({
   hideModal,
+  type,
   createOne,
   updateOne,
   categories,
-  itemId
+  category,
 }) => {
+  console.log('cats >>> ', categories);
+
   let fields = [
     {
       name: "title",
@@ -23,44 +26,44 @@ const CategoryForm = ({
     },
     {
       name: "type",
-      type: "radio",
-      options: ["income", "expense"],
-      value: "expense"
+      type: "text",
+      value: type || null,
+      readonly: true,
     },
     {
-      name: "categorylevel",
+      name: "parentId",
       type: "select",
       placeholder: "pick category",
-      options: categories.map(cat => ({...cat, text: cat.title, key: cat.id, value: cat.id })),
+      options: [
+        { text: 'No parent', value: null }, 
+        ...categories
+          .map(cat => ({ title: cat.title, text: cat.title, key: cat.id, value: cat.id }))
+      ],
       value: null
     }
   ];
-
-  if (itemId) {
-    let category = categories.find(a => a.id === itemId);
-
-    fields.map(a => (a.value = category[a.name]));
+  
+  if (category) {
+   fields.forEach(c => (c.value = category[c.name]));
   }
-
+  
   const submitHandler = async formData => {
     let serverResponse;
 
-    if (itemId) {
-      serverResponse = await axios.patch(
-        "http://localhost:2345/api/categories/" + itemId,
+    if (category) {
+      serverResponse = await axios.put(
+        "http://localhost:2345/api/categories/" + category.id,
         formData
       );
-      let { category } = serverResponse.data;
 
-      updateOne(category);
+      updateOne(serverResponse.data.category);
     } else {
       serverResponse = await axios.post(
         "http://localhost:2345/api/categories",
         formData
       );
-      let { category } = serverResponse.data;
 
-      createOne(category);
+      createOne(serverResponse.data.category);
     }
 
     let { errors } = serverResponse.data;
@@ -70,14 +73,38 @@ const CategoryForm = ({
     }
     
     hideModal();
+
     return null;
   };
 
   return <Form fields={fields} submitHandler={submitHandler} />;
 };
 
-const mapStateToProps = ({ categories }) => ({
-  categories
-});
+const mapStateToProps = ({ categories }, { itemId, type }) => {
+  let visibleCategories; 
+  let category = categories.find(c => c.id === itemId);
+  let hasChildren = false;
+
+  if (category) {
+    hasChildren = categories.some(cat => cat.parentId === category.id )
+  }
+
+  console.log('has children -< ', hasChildren);
+
+  visibleCategories = categories.filter(cat => {
+    if (cat.type !== type) return false
+    if (cat.parentId !== null) return false
+    if (hasChildren) return false
+    if (category && cat.id === category.id) return false;
+    
+    return true
+  });
+
+  return {
+    categories: visibleCategories,
+    category,
+    type,
+  }
+};
 
 export default withRouter(connect(mapStateToProps, { createOne, updateOne })(CategoryForm));

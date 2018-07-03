@@ -56,18 +56,18 @@ class FormComponent extends Component {
   };
 
   renderFormField = (field) => {
-    const { name, type, options, placeholder } = field;
+    const { name, type, options, placeholder, readonly = false } = field;
     const { inputValues } = this.state;
     const { inputHandler } = this;
 
     switch(type) {
       case 'select': 
-        return <Dropdown 
-          name={name}
-          selection
+        return <Form.Select 
+          label={placeholder}
           placeholder={placeholder}
+          name={name}
           options={options} 
-          onChange={inputHandler}
+          onChange={inputHandler.bind(this)}
           value={inputValues[name]}
         />
 
@@ -88,6 +88,7 @@ class FormComponent extends Component {
           <div>
             <label htmlFor={name}>{name}</label>
             <input
+              readOnly={readonly}
               placeholder={placeholder}
               name={name}
               type={type}
@@ -101,10 +102,9 @@ class FormComponent extends Component {
   };
 
   render() {
-    const { fields, inputHandler, formHandler } = this;
-    const { inputValues, errors } = this.state;
+    const { fields, formHandler } = this;
+    const { errors } = this.state;
     
-    console.log("form state -> ", inputValues);
     return (
       <Form onSubmit={formHandler} >
         {

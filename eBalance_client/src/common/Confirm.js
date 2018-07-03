@@ -20,14 +20,15 @@ class Confirmation extends Component {
 
   render() {
     const { itemId, removeItem, btnConfig = {} } = this.props;
-    const { basic, color, icon } = btnConfig;
+    const { basic = false, color, icon = null } = btnConfig;
 
-    console.log("btnConfig >> ", btnConfig, ' props >>> ', this.props);
+    // console.log("btnConfig >> ", btnConfig, ' props >>> ', this.props);
+
     return (
       <Fragment>
         <Button 
-          basic={basic && basic} 
-          icon={icon && icon} 
+          basic={basic} 
+          icon={icon} 
           onClick={this.open} 
           color={color} 
         />

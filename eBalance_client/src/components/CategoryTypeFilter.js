@@ -30,4 +30,4 @@ const CategoryTypeFilter = ({ categories, renderCategoryItem }) => {
   return <Tab panes={panes} />
 }
 
-export default CategoryTypeFilter;;
+export default CategoryTypeFilter;

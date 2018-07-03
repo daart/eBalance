@@ -10,17 +10,17 @@ import CategoryForm from './CategoryForm';
 
 let editCategoryBtnConfig = {
   color: "teal",
-  icon: "edit",
+  icon: "pencil",
   basic: true,
 };
 
 let deleteBtnConfig = {
   color: "red",
-  icon: "times",
+  icon: "remove",
   basic: true
 };
 
-const CategoryItem = ({ category, removeCategory, showControls }) => {
+const CategoryItem = ({ category, removeCategory, showControls, type }) => {
   const { title, id } = category;
 
   return <li key={id}>
@@ -37,6 +37,7 @@ const CategoryItem = ({ category, removeCategory, showControls }) => {
           />
 
           <Modal 
+            type={type}
             modalContent={CategoryForm} 
             headerContent="Edit Account" 
             triggerBtnConfig={editCategoryBtnConfig} 
