@@ -56,9 +56,14 @@ class FormComponent extends Component {
   };
 
   renderFormField = (field) => {
-    const { name, type, options, placeholder, readonly = false } = field;
     const { inputValues } = this.state;
     const { inputHandler } = this;
+    let { name, type, options, placeholder, readonly = false, value } = field;
+    let selectOptions = [];
+
+    if (typeof options === 'function') {
+      selectOptions = options(inputValues.type);
+    } 
 
     switch(type) {
       case 'select': 
@@ -66,8 +71,8 @@ class FormComponent extends Component {
           label={placeholder}
           placeholder={placeholder}
           name={name}
-          options={options} 
-          onChange={inputHandler.bind(this)}
+          options={ selectOptions } 
+          onChange={inputHandler}
           value={inputValues[name]}
         />
 
@@ -79,7 +84,7 @@ class FormComponent extends Component {
             label={option}
             name={name}
             value={option}
-            checked={ inputValues[name] === option}
+            checked={inputValues[name] === option}
             onChange={inputHandler}
           />
         ));

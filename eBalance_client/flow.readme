@@ -1,0 +1,9 @@
+ we have Categories screen
+-- it contains:
+  -- CategoryList 
+    -- CategoryItem attributes: {Category }
+
+
+
+
+  -- and Add New Category Btn + modal 

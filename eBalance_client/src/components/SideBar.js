@@ -16,6 +16,9 @@ const SideBar = () => {
         <NavLink activeClassName="yellow active" className="item" to="/accounts">Accounts</NavLink>
       </Menu.Item>
       <Menu.Item>
+        <NavLink activeClassName="yellow active" className="item" to="/transactions">Transactions</NavLink>
+      </Menu.Item>
+      <Menu.Item>
         <NavLink activeClassName="yellow active" className="item" to="/private">Private</NavLink>
       </Menu.Item>
     </Menu>

@@ -17,6 +17,7 @@ import Accounts from "./screens/Accounts";
 import Account from "./screens/Account";
 import Categories from './screens/Categories';
 import Category from './screens/Category';
+import Transactions from './screens/Transactions';
 
 import Header from "./components/Header";
 import SideBar from './components/SideBar';
@@ -78,6 +79,7 @@ class App extends Component {
                       <PrivateRoute path="/categories" component={() => <div>@Categories <Categories /> </div> } />
                       <PrivateRoute path="/accounts/:id" component={ Account } />
                       <PrivateRoute path="/accounts" component={ Accounts } />
+                      <PrivateRoute path="/transactions" component={ Transactions } />
                       <PrivateRoute path="/income" component={ () => <div>@income</div> } />
                       <PrivateRoute path="/transfer" component={ () => <div>@transfer!</div> } />
                       <PrivateRoute path="/expense" component={ () => <div>@expense</div> } />

@@ -15,8 +15,7 @@ const CategoryForm = ({
   categories,
   category,
 }) => {
-  console.log('cats >>> ', categories);
-
+  // console.log('cats >>> ', categories, ' current Category :: ', category, ' active type >> ', type);
   let fields = [
     {
       name: "title",
@@ -26,23 +25,49 @@ const CategoryForm = ({
     },
     {
       name: "type",
-      type: "text",
+      type: category ? 'text' : 'radio',
+      options: ['expense', 'income'],
       value: type || null,
-      readonly: true,
+      readonly: category ? true : false,
     },
     {
       name: "parentId",
       type: "select",
       placeholder: "pick category",
-      options: [
-        { text: 'No parent', value: null }, 
-        ...categories
-          .map(cat => ({ title: cat.title, text: cat.title, key: cat.id, value: cat.id }))
-      ],
+      options: function(type) {
+        let hasChildren = false;
+        let visibleCategories = [];
+
+        if (category) {
+          hasChildren = categories.some(cat => cat.parentId === category.id)
+        }
+
+        visibleCategories = categories
+          .filter(cat => {
+            if (cat.type !== type) return false;
+            if (cat.parentId !== null) return false;
+            if (hasChildren) return false;
+            if (category && cat.id === category.id) return false;
+
+            return true;
+          })
+
+        return [
+          { text: "No Parent", value: null }, 
+          ...visibleCategories.map(
+            cat => ({
+              title: cat.title,
+              text: cat.title,
+              key: cat.id,
+              value: cat.id
+            })
+          )
+        ];
+      },
       value: null
     }
   ];
-  
+
   if (category) {
    fields.forEach(c => (c.value = category[c.name]));
   }
@@ -89,7 +114,7 @@ const mapStateToProps = ({ categories }, { itemId, type }) => {
     hasChildren = categories.some(cat => cat.parentId === category.id )
   }
 
-  console.log('has children -< ', hasChildren);
+  console.log('has children -< ', hasChildren, ' fuck that ttype >> ', type);
 
   visibleCategories = categories.filter(cat => {
     if (cat.type !== type) return false
@@ -101,7 +126,8 @@ const mapStateToProps = ({ categories }, { itemId, type }) => {
   });
 
   return {
-    categories: visibleCategories,
+    // categories: visibleCategories,
+    categories,
     category,
     type,
   }

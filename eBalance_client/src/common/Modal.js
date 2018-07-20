@@ -35,7 +35,7 @@ class ModalDimmer extends Component {
         trigger={
           <Button
             basic={basic}
-            icon={ icon && icon }
+            icon={ icon ? icon : null }
             onClick={ this.showModal }
             color={ color }
           >
