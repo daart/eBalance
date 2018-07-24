@@ -69,12 +69,13 @@ export const getAll = async (req, res) => {
     const allTransactions = await Transaction.findAndCountAll({
       where: {
         userId,
+        deleted: false
       },
       limit: 15
     })
 
-    const { limit, offset } = allTransactions;
-    console.log("ROOWS => ", allTransactions.rows);
+    const { limit, offset, rows } = allTransactions;
+    console.log("ROOWS => ", rows);
     res.json({
       transactions: allTransactions,
       limit,

@@ -58,8 +58,6 @@ class Dashboard extends Component {
               
               <TransactionForm />
 
-              asd
-
             </Grid.Column>
 
           </Grid.Row>

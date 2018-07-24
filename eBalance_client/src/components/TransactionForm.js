@@ -39,7 +39,7 @@ class TransactionForm extends Component {
     e.preventDefault();
     
     const { inputValues } = this.state;
-    const { transaction, createOne, updateOne } = this.props;
+    const { transaction, createOne, updateOne, hideModal } = this.props;
     let serverResponse;
     let formData = inputValues;
 
@@ -73,6 +73,8 @@ class TransactionForm extends Component {
 
       return errors;
     } 
+    
+    hideModal();
 
     return null;
   }
