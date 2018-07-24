@@ -27,7 +27,7 @@ const transactions = (state = { rows: [], count: 0 }, { type, payload }) => {
       return {
         ...state,
         rows: state.rows.filter(transaction => transaction.id !== payload),
-        count: state.count--
+        // count: state.count--
       }
 
     case TRANSACTIONS_GET_ALL:

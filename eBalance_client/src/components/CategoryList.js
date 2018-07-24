@@ -5,8 +5,6 @@ import { List, Menu } from 'semantic-ui-react';
 import CategoryItem from "./CategoryItem";
 import Modal from './../common/Modal';
 import CategoryForm from './../components/CategoryForm';
-// import CategoryTypeFilter from './CategoryTypeFilter';
-// import CategoryTypeSwithcer from './CategoryTypeSwitcher';
 
 const createNewCategoryBtnConfig = {
   color: "green",

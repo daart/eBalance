@@ -16,8 +16,15 @@ export const createOne = async (req, res) => {
     res.json({ transaction: newTransaction })
   } catch (error) {
     console.log('TransCREATION Errora --> ', error);
-    
-    res.json({ error })
+    if (
+      error.name === "SequelizeValidationError" ||
+      error.name === "SequelizeUniqueConstraintError"
+    ) {
+      res.json({ errors: formatValidationErrors(error.errors) });
+    } else {
+      console.log(error);
+      res.status(500).json({ msg: "Smth went wrong" });
+    }
   }
 }
 
@@ -67,7 +74,7 @@ export const getAll = async (req, res) => {
     })
 
     const { limit, offset } = allTransactions;
-
+    console.log("ROOWS => ", allTransactions.rows);
     res.json({
       transactions: allTransactions,
       limit,

@@ -3,6 +3,14 @@ import { connect } from 'react-redux';
 import { List } from 'semantic-ui-react';
 
 import TransactionItem from './TransactionItem';
+import Modal from "./../common/Modal";
+import TransactionForm from "./TransactionForm";
+
+const createNewTransactionBtnConfig = {
+  color: "green",
+  basic: true,
+  icon: "add"
+};
 
 class TransactionList extends Component {
   constructor(props) {
@@ -18,18 +26,26 @@ class TransactionList extends Component {
     const { transactions } = this.state;
 
     return (
-      <List>
-        {
-          transactions.map(transaction => (
-              <List.Item key={transaction.id}>
-                <TransactionItem 
-                  transaction={transaction}
-                />
-              </List.Item>
+      <Fragment>
+        <List>
+          {
+            transactions.map(transaction => (
+                <List.Item key={transaction.id}>
+                  <TransactionItem 
+                    transaction={transaction}
+                  />
+                </List.Item>
+              )
             )
-          )
-        }
-      </List>
+          }
+        </List>
+        
+        <Modal 
+          modalContent={TransactionForm}
+          headerContent="Add New Transaction"
+          triggerBtnConfig={createNewTransactionBtnConfig} 
+        />
+      </Fragment>
     )
   }
 }

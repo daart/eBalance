@@ -10,10 +10,11 @@ class TransactionForm extends Component {
     super(props);
 
     this.state = {
+      errors: {},
       inputValues: {
         fromId: null,
         toId: null,
-        categoryId: "",
+        categoryId: null,
         description: "",
         createdAt: "",
         amount: 0,
@@ -37,11 +38,8 @@ class TransactionForm extends Component {
   submitHandler = async (e) => {
     e.preventDefault();
     
-    // debugger;
-
     const { inputValues } = this.state;
     const { transaction, createOne, updateOne } = this.props;
-
     let serverResponse;
     let formData = inputValues;
 
@@ -64,8 +62,15 @@ class TransactionForm extends Component {
     }
 
     let { errors } = serverResponse.data;
-
+    
     if (errors) {
+      await this.setState({
+        errors: {
+          ...this.state.errors,
+          errors
+        }
+      });
+
       return errors;
     } 
 
@@ -75,8 +80,6 @@ class TransactionForm extends Component {
   inputHandler = (e, data) => {
     const { name, value } = data ? data : e.target;
     const { inputValues } = this.state;
-
-    // console.log("Dropdown val ===> ", data);
 
     this.setState({
       inputValues: {
