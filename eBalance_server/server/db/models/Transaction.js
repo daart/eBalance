@@ -32,21 +32,40 @@ export default (sequelize, DataTypes) => {
     Transaction.belongsTo(models.Account, { foreignKey: "toId", as: "to" });
   }
 
-  Transaction.prototype.execTransaction = async function (instance) {
+  Transaction.prototype.execTransaction = async function (accountModel) {
     const { type, amount, fromId, toId } = this;
 
     if (type === 'expense') {
-      await instance.decrement('balance', {by: amount, where: {id: fromId}})
+      await accountModel.decrement('balance', {by: amount, where: {id: fromId}})
     }
+    
     if (type === 'income') {
-      await instance.increment('balance', {by: amount, where: {id: toId}})
+      await accountModel.increment('balance', {by: amount, where: {id: toId}})
     }
-    if (type === 'expense') {
-      await instance.decrement('balance', {by: amount, where: {id: fromId}})
-      await instance.increment('balance', {by: amount, where: {id: toId}})
+    
+    if (type === 'transfer') {
+      await accountModel.decrement('balance', {by: amount, where: {id: fromId}})
+      await accountModel.increment('balance', {by: amount, where: {id: toId}})
     }
 
-    instance.save();
+  }
+
+  Transaction.prototype.revertTransaction = async function (accountModel) {
+    const { type, amount, fromId, toId } = this;
+    
+    if (type === 'expense') {
+      await accountModel.increment('balance', { by: amount, where: { id: fromId } });
+    }
+
+    if (type === 'income') {
+      await accountModel.decrement('balance', { by: amount, where: { id: toId } });
+    }
+    
+    if (type === 'transfer') {
+      await accountModel.increment('balance', { by: amount, where: { id: fromId } });
+      await accountModel.decrement('balance', { by: amount, where: { id: toId } });
+    }
+
   }
 
   return Transaction;

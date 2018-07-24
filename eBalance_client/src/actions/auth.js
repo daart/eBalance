@@ -3,11 +3,13 @@ import axios from 'axios';
 import { LOGOUT, LOGIN, VALIDATE_TOKEN } from './types';
 import { getAll as getAllAccounts } from './accounts';
 import { getAll as getAllCategories } from './categories';
+import { getAll as getAllTransactions } from './transactions';
 import { setReady, unsetReady } from './app';
 
 export const fetchUserData = () => dispatch => {
   return Promise.all[
     dispatch(getAllAccounts()),
+    dispatch(getAllTransactions()),
     dispatch(getAllCategories())
   ];
 }
@@ -30,6 +32,7 @@ export const login = (token) => (dispatch) => {
 
   // return dispatch(fetchUserData());
   dispatch(getAllAccounts());
+  dispatch(getAllTransactions());
   dispatch(getAllCategories());
   // for now its just fetchAccounts
   // console.log('fetching user data');

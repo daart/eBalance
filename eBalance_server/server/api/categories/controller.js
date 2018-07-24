@@ -63,7 +63,7 @@ export const getAll = async (req, res) => {
   try {
     const categories = await Category.findAll({ where: { userId, deleted: false } });
 
-    console.log('get all -> ', categories);
+    // console.log('get all -> ', categories);
 
     res.status(200).json({ categories });
   } catch ({ error }) {

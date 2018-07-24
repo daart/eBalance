@@ -10,7 +10,7 @@ router.route('/')
 
 router.route('/:id')
   .get(getOne)
-  .patch(updateOne)
+  .put(updateOne)
   .delete(deleteOne);
 
 export default router;

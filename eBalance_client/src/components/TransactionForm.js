@@ -1,6 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { Button, Form, Checkbox, Dropdown, Tab, Menu } from "semantic-ui-react";
 import { connect } from 'react-redux';
+import axios from 'axios';
+
+import { updateOne, createOne  } from './../actions/transactions';
 
 class TransactionForm extends Component {
   constructor(props) {
@@ -8,9 +11,9 @@ class TransactionForm extends Component {
 
     this.state = {
       inputValues: {
-        fromAccount: "",
-        toAccount: "",
-        category: "",
+        fromId: null,
+        toId: null,
+        categoryId: "",
         description: "",
         createdAt: "",
         amount: 0,
@@ -31,11 +34,49 @@ class TransactionForm extends Component {
     });
   };
 
+  submitHandler = async (e) => {
+    e.preventDefault();
+    
+    // debugger;
+
+    const { inputValues } = this.state;
+    const { transaction, createOne, updateOne } = this.props;
+
+    let serverResponse;
+    let formData = inputValues;
+
+    if (transaction) {
+      serverResponse = await axios.put(
+        "http://localhost:2345/api/transactions/" + transaction.id,
+        formData
+      );
+
+      updateOne(serverResponse.data.transaction);
+    } else {
+      serverResponse = await axios.post(
+        "http://localhost:2345/api/transactions",
+        formData
+      );
+
+      console.log('serverresponded on Create ==> ', serverResponse.data);
+
+      createOne(serverResponse.data.transaction);
+    }
+
+    let { errors } = serverResponse.data;
+
+    if (errors) {
+      return errors;
+    } 
+
+    return null;
+  }
+
   inputHandler = (e, data) => {
     const { name, value } = data ? data : e.target;
     const { inputValues } = this.state;
 
-    console.log("Dropdown val ===> ", data);
+    // console.log("Dropdown val ===> ", data);
 
     this.setState({
       inputValues: {
@@ -47,7 +88,7 @@ class TransactionForm extends Component {
 
   render() {
     const { inputValues } = this.state;
-    const { type, fromAccount, toAccount } = inputValues;
+    const { type, fromId, toId } = inputValues;
     const { accounts, categories } = this.props;
 
     return <Fragment>
@@ -62,21 +103,21 @@ class TransactionForm extends Component {
           ))}
         </Menu>
 
-        <Form>
+        <Form onSubmit={ this.submitHandler } >
           {
             type !== 'expense' && (
               <Form.Field>
                 <Dropdown
                   selection
-                  name="toAccount"
+                  name="toId"
                   defaultOpen={true}
                   onChange={ this.inputHandler }
-                  placeholder="toAccount"
+                  placeholder="toId"
                   options={
                     [
                       { text: 'Empty', value: null },
                       ...accounts
-                        .filter(acc => acc.id !== fromAccount)
+                        .filter(acc => acc.id !== fromId)
                         .map(acc => ({ text: acc.title, value: acc.id, name: acc.title }))
                     ]
                   }
@@ -89,14 +130,14 @@ class TransactionForm extends Component {
               <Form.Field>
                 <Dropdown
                   selection
-                  name="fromAccount"
-                  placeholder="fromAccount"
+                  name="fromId"
+                  placeholder="fromId"
                   onChange={ this.inputHandler }
                   options={
                     [
                       { text: 'Empty', value: null },
                       ...accounts
-                        .filter(acc => acc.id !== toAccount)
+                        .filter(acc => acc.id !== toId)
                         .map(acc => ({ text: acc.title, value: acc.id, name: acc.title }))
                     ]
 
@@ -110,8 +151,8 @@ class TransactionForm extends Component {
               <Form.Field>
                 <Dropdown
                   selection
-                  name="category"
-                  placeholder="category"
+                  name="categoryId"
+                  placeholder="categoryId"
                   onChange={ this.inputHandler }
                   options={
                     [
@@ -126,6 +167,29 @@ class TransactionForm extends Component {
               </Form.Field>
             )
           }
+          <Form.Field>
+            <Fragment>
+              <label htmlFor='amount'>amount</label>
+              <input
+                name='amount'
+                type='text'
+                onChange={this.inputHandler}
+                value={inputValues['amount']}
+              />
+            </Fragment>
+          </Form.Field>
+
+          <Form.Field>
+            <Fragment>
+              <label htmlFor='description'>description</label>
+              <input
+                name='description'
+                type='text'
+                onChange={this.inputHandler}
+                value={inputValues['description']}
+              />
+            </Fragment>
+          </Form.Field>
           <Button type="submit">Send</Button>
         </Form>
       </Fragment>;
@@ -146,49 +210,7 @@ const mapStateToProps = ({ accounts, categories }) => {
     }, { income: [], expense: [] }
   ) || {};
 
-  // const fields = [
-  //   {
-  //     name: "fromAccount",
-  //     type: "select",
-  //     options: function (exclude) {
-  //       return accounts.filter(a => a.id !== exclude).map(acc => ({ text: acc.title, value: acc.id, name: acc.title }))
-  //     },
-  //     value: ""
-  //   },
-  //   {
-  //     name: "toAccount",
-  //     type: "select",
-  //     options: function (exclude) {
-  //       return accounts.filter(a => a.id !== exclude).map(acc => ({ text: acc.title, value: acc.id, name: acc.title }))
-  //     },
-  //     value: ""
-  //   },
-  //   {
-  //     name: "category",
-  //     type: "select",
-  //     options: function(type) {
-  //       return categoriesMap[type]
-  //     },
-  //     value: ""
-  //   },
-  //   {
-  //     name: "description",
-  //     type: "text",
-  //     value: ""
-  //   },
-  //   {
-  //     name: "amount",
-  //     type: "text",
-  //     value: ""
-  //   },
-  //   {
-  //     name: "createdAt",
-  //     type: "text",
-  //     value: ""
-  //   },
-  // ]
-
   return { accounts, categories };
 };
 
-export default connect(mapStateToProps)(TransactionForm);
+export default connect(mapStateToProps, { createOne, updateOne })(TransactionForm);

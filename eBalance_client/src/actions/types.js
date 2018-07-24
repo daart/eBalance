@@ -17,12 +17,11 @@ export const CATEGORY_UPDATE = 'CATEGORY_UPDATE';
 export const CATEGORY_DELETE = 'CATEGORY_DELETE';
 export const CATEGORY_GET = 'CATEGORY_GET';
 
+export const TRANSACTIONS_GET_ALL = 'TRANSACTIONS_GET_ALL';
+export const TRANSACTION_CREATE = 'TRANSACTION_CREATE';
+export const TRANSACTION_UPDATE = 'TRANSACTION_UPDATE';
+export const TRANSACTION_DELETE = 'TRANSACTION_DELETE';
+export const TRANSACTION_GET = 'TRANSACTION_GET';
+
 export const APP_READY = 'APP_READY';
 export const APP_NOT_READY = 'APP_NOT_READY';
-
-// GENERAL of CRUDs
-export const GET_ALL = 'GET_ALL';
-export const GET_ONE = "GET_ONE";
-export const ADD_ONE = 'ADD_ONE';
-export const DELETE_ONE = "DELETE_ONE";
-export const UPDEATE_ONE = "UPDEATE_ONE";
