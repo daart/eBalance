@@ -94,19 +94,16 @@ export const getAll = async (req, res) => {
           model: Account, 
           as: 'fromAccount', 
           attributes: ['id', 'title', 'balance', 'deleted'], 
-          // where: { deleted: false }
         },
         {
           model: Account, 
           as: 'toAccount', 
           attributes: ['id', 'title', 'balance', 'deleted'], 
-          // where: { deleted: false }
         },
         {
           model: Category, 
           as: 'category', 
           attributes: ['id', 'title', 'deleted'], 
-          // where: { deleted: false }
         },
       ],
       offset,

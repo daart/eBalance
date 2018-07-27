@@ -13,15 +13,17 @@ export const getAll = (pageNum = 1) => async dispatch => {
   // const apiResponse = await axios.get(`http://localhost:2345/api/transactions?page=${pageNum}`);
   const apiResponse = await axios.get(`http://localhost:2345/api/transactions?page=` + +pageNum);
 
-  const { transactions, count } = apiResponse.data;
+  const { transactions, count, limit, offset } = apiResponse.data;
 
-  console.log('transactions Thunk ! --=->', transactions, ' count -> ', count);
+  console.log('transactions Thunk ! --=->', transactions, ' count -> ', count, limit);
   
   dispatch({ 
     type: TRANSACTIONS_GET_ALL, 
     payload: {
       rows: transactions,
-      count
+      count,
+      limit,
+      offset
     }
   });
 

@@ -31,12 +31,14 @@ const transactions = (state = { rows: [], count: 0 }, { type, payload }) => {
       }
 
     case TRANSACTIONS_GET_ALL:
-      let { rows, count } = payload;
+      let { rows, count, limit } = payload;
 
       return {
         ...state, 
-        rows: [...state.rows, ...rows],
-        count
+        // rows: [...state.rows, ...rows],
+        rows: [...rows],
+        count, 
+        limit
       };
 
     default:

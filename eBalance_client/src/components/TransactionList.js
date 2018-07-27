@@ -15,103 +15,109 @@ const createNewTransactionBtnConfig = {
 };
 
 class TransactionList extends Component {
-  state = {
-    currentPage: 1,
-    currentPageTransactions: [],
-    transactionsPerPage: {},
-    loading: null
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      currentPage: 1,
+      currentTransactionsList: [],
+      cachedTransactions: {},
+      isLoading: null,
+    };
   }
 
   componentDidMount() {
-    this.loadPage(this.state.currentPage, true);
+    this.loadPage(this.state.currentPage);
   }
 
-  loadPage = (page, saveLocally = false) => {
-    // transactions are cached
-    if (this.state.transactionsPerPage[page]) {
-      this.setState({currentPage: page})
-      return;
+  renderControls = pages => {
+    let { currentPage, isLoading } = this.state;
+    
+    return new Array(pages).fill(null).map((el, i) => (
+      <Button
+        active={ currentPage === i + 1 }
+        loading={ isLoading === i + 1 }
+        onClick={() => {
+          this.loadPage(i + 1)
+        }}
+      >
+        {i + 1}
+      </Button>
+      )
+    );
+  };
+
+  loadPage = async (pageNum) => {
+    let { cachedTransactions } = this.state;
+    const { getAll } = this.props;
+
+    if (cachedTransactions[pageNum]) {
+      this.setState({
+        currentPage: pageNum
+      })
+      return 
+    } 
+
+    this.setState({
+      isLoading: pageNum
+    })
+
+    let transactionsResponse = await getAll(pageNum);
+    let newStateObj = {
+      currentPage: pageNum,
+      cachedTransactions: {
+        ...cachedTransactions,
+        [pageNum]: transactionsResponse
+      },
+      isLoading: null
     }
 
-    this.setState({loading: page});
-
-    this.props.getAll(page)
-      .then((transactions) => {
-        let newState = {
-          currentPage: page,
-          loading: null
-        };
-        
-        if (saveLocally) {
-          newState.transactionsPerPage = {
-            ...this.state.transactionsPerPage,
-            [page]: transactions
-          }
-        }
-        
-        this.setState(newState);
-      })
-  }
+    this.setState(newStateObj);
+  };
 
   render() {
-    let { currentPage, currentPageTransactions } = this.state;
-    
-    const { transactions, total } = this.props;
+    const { total, limit } = this.props;
+    const {
+      currentPage,
+      cachedTransactions,
+      currentTransactionsList,
+    } = this.state;
+    const pages = Math.ceil(total / limit);
 
-    const thereIsNextPage = transactions.length < total;
-
-    const pages = Math.ceil(total/5);
+    console.log(
+      this.state
+    );
 
     return (
       <Fragment>
-        <Modal
-          modalContent={TransactionForm}
-          headerContent="Add New Transaction"
-          triggerBtnConfig={createNewTransactionBtnConfig}
-        />
+        @List of TransActions
+        { total && this.renderControls(pages) }
 
-        {transactions.length > 0 ? (
-          <Fragment>
-            <List>
-
-              {thereIsNextPage && (
-                <Button onClick={() => this.loadPage(currentPage + 1)}>
-                  Load More
-                </Button>
-              )}
-              
-              {Array(pages).fill(null).map((_, i) => 
-                <Button
-                  onClick={() => {
-                    this.loadPage(i + 1, true)
-                  }}
-                  color={currentPage === i + 1 ? 'green' : null}
-                  loading={this.state.loading === i + 1}
-                >{i + 1}</Button>
-              )}
-
-              {this.state.transactionsPerPage[currentPage] && this.state.transactionsPerPage[currentPage].map(transaction => (
-                <List.Item key={transaction.id}>
-                  <TransactionItem transaction={transaction} />
-                </List.Item>
-              ))}
-            </List>
-            
-          </Fragment>
-        ) : (
-          <div>No Transactions yet!</div>
-        )}
+        <List>
+          {cachedTransactions[currentPage] && (
+            cachedTransactions[currentPage].map(t => {
+                return (
+                  <List.Item key={t.id}>
+                    <TransactionItem transaction={t} />
+                  </List.Item>
+                );
+              })
+            )
+          }
+        </List>
       </Fragment>
     );
   }
 }
 
 const mapStateToProps = ({ transactions }) => {
-  console.log('transactions :: ', transactions.rows, transactions.count);
+  const { rows, count, limit } = transactions;
+  console.log('transactions :: ', rows, count, limit);
   
   return {
-    transactions: transactions.rows,
-    total: transactions.count
+    transactions: rows,
+    total: count,
+    limit
   }
 }
 
