@@ -31,7 +31,13 @@ const transactions = (state = { rows: [], count: 0 }, { type, payload }) => {
       }
 
     case TRANSACTIONS_GET_ALL:
-      return payload;
+      let { rows, count } = payload;
+
+      return {
+        ...state, 
+        rows: [...state.rows, ...rows],
+        count
+      };
 
     default:
       return state;

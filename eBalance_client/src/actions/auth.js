@@ -6,7 +6,7 @@ import { getAll as getAllCategories } from './categories';
 import { getAll as getAllTransactions } from './transactions';
 import { setReady, unsetReady } from './app';
 
-export const fetchUserData = () => dispatch => {
+export const fetchUserData = () => async dispatch => {
   return Promise.all[
     dispatch(getAllAccounts()),
     dispatch(getAllTransactions()),
@@ -14,7 +14,7 @@ export const fetchUserData = () => dispatch => {
   ];
 }
 
-export const login = (token) => (dispatch) => {
+export const login = (token) => async (dispatch) => {
   localStorage.setItem('token', token);
   axios.defaults.headers.common['Authorization'] = token;
 
@@ -30,10 +30,11 @@ export const login = (token) => (dispatch) => {
   // for example dispatch(fetchUserData())
   // Promise.all([getAllAccounts(), getAllCategories()]) etc
 
-  // return dispatch(fetchUserData());
-  dispatch(getAllAccounts());
-  dispatch(getAllTransactions());
-  dispatch(getAllCategories());
+  let userData = await dispatch(fetchUserData());
+  return userData;
+  // dispatch(getAllAccounts());
+  // dispatch(getAllTransactions());
+  // dispatch(getAllCategories());
   // for now its just fetchAccounts
   // console.log('fetching user data');
   // return dispatch(getAll());

@@ -29,7 +29,7 @@ const TransactionItem = ({ transaction = {}, fromAccount = {}, toAccount = {}, c
     updatedAt
   } = transaction;
 
-  console.log(this.props);
+  // console.log(this.props);
 
   return <Fragment>
       {
@@ -64,7 +64,7 @@ const TransactionItem = ({ transaction = {}, fromAccount = {}, toAccount = {}, c
 
 const mapStateToProps = ({ accounts, categories }, { transaction }) => {
   const { fromId, toId, categoryId } = transaction;
-  console.log('action transaction --> ', transaction, ' ::: ', fromId, toId);
+  // console.log('action transaction --> ', transaction, ' ::: ', fromId, toId);
 
   return {
     fromAccount: accounts.find(acc => acc.id === fromId),

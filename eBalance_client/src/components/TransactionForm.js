@@ -2,8 +2,10 @@ import React, { Component, Fragment } from 'react';
 import { Button, Form, Checkbox, Dropdown, Tab, Menu } from "semantic-ui-react";
 import { connect } from 'react-redux';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 
 import { updateOne, createOne  } from './../actions/transactions';
+import { getAll  } from './../actions/accounts';
 
 class TransactionForm extends Component {
   constructor(props) {
@@ -39,9 +41,11 @@ class TransactionForm extends Component {
     e.preventDefault();
     
     const { inputValues } = this.state;
-    const { transaction, createOne, updateOne, hideModal } = this.props;
+    const { transaction, createOne, updateOne, hideModal, getAllAccounts, location } = this.props;
     let serverResponse;
     let formData = inputValues;
+
+    console.log('lcation ==> ', location);
 
     if (transaction) {
       serverResponse = await axios.put(
@@ -56,7 +60,7 @@ class TransactionForm extends Component {
         formData
       );
 
-      console.log('serverresponded on Create ==> ', serverResponse.data);
+      // console.log('serverresponded on Create ==> ', serverResponse.data);
 
       createOne(serverResponse.data.transaction);
     }
@@ -74,7 +78,11 @@ class TransactionForm extends Component {
       return errors;
     } 
     
-    hideModal();
+    // getAllAccounts();
+
+    if (location.pathname === "/transactions") {
+      hideModal();
+    }
 
     return null;
   }
@@ -94,7 +102,9 @@ class TransactionForm extends Component {
   render() {
     const { inputValues } = this.state;
     const { type, fromId, toId } = inputValues;
-    const { accounts, categories } = this.props;
+    const { accounts, categories, location, history, match } = this.props;
+
+    console.log(location, history);
 
     return <Fragment>
         <Menu secondary>
@@ -218,4 +228,4 @@ const mapStateToProps = ({ accounts, categories }) => {
   return { accounts, categories };
 };
 
-export default connect(mapStateToProps, { createOne, updateOne })(TransactionForm);
+export default withRouter(connect(mapStateToProps, { createOne, updateOne, getAllAccounts: getAll })(TransactionForm));

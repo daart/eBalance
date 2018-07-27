@@ -5,7 +5,6 @@ const { User } = db;
 export const deleteUser = async (req, res) => {
   const { id } = req.params;
 
-  console.log('req param ID -> ', id);
   try {
     let user = await User.destroy({where: { id }});
 

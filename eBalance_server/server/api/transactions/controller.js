@@ -2,27 +2,43 @@ import db from "./../../db/models";
 
 import formatValidationErrors from "./../../utils/formatValidationErrors";
 
-const { Transaction, Account } = db;
+const { Transaction, Account, Category } = db;
 
 export const createOne = async (req, res) => {
   const userId = req.user_id;
   const payload = Object.assign({}, {userId}, req.body);
   
   try {
-    const newTransaction = await Transaction.create(payload);
+    const t = await Transaction.create(payload);
     
-    await newTransaction.execTransaction(Account)
+    await t.execTransaction(Account)
+    
+    const transaction = await Transaction.findById(t.id, {
+      include: [
+        {
+          model: Account, 
+          as: 'fromAccount',
+        },
+        {
+          model: Category, 
+          as: 'category',
+        },
+        {
+          model: Account, 
+          as: 'toAccount',
+        }
+      ]
+    });
 
-    res.json({ transaction: newTransaction })
+    res.json({ transaction })
   } catch (error) {
-    console.log('TransCREATION Errora --> ', error);
+
     if (
       error.name === "SequelizeValidationError" ||
       error.name === "SequelizeUniqueConstraintError"
     ) {
       res.json({ errors: formatValidationErrors(error.errors) });
     } else {
-      console.log(error);
       res.status(500).json({ msg: "Smth went wrong" });
     }
   }
@@ -38,9 +54,7 @@ export const updateOne = async (req, res) => {
     await updatedTransaction.execTransaction(Account);
 
     res.status(200).json({ transaction: updatedTransaction });
-
   } catch (error) {
-    console.log(error);
     res.status(400).json({ error });
   }
 };
@@ -64,6 +78,10 @@ export const getOne = async (req, res) => {
 
 export const getAll = async (req, res) => {
   const userId = req.user_id;
+  const limit = 5;
+  
+  /* TODO: Pagination */
+  let offset = req.query.page > 1 ? (req.query.page - 1) * limit : 0; 
 
   try {
     const allTransactions = await Transaction.findAndCountAll({
@@ -71,18 +89,41 @@ export const getAll = async (req, res) => {
         userId,
         deleted: false
       },
-      limit: 15
+      include: [
+        {
+          model: Account, 
+          as: 'fromAccount', 
+          attributes: ['id', 'title', 'balance', 'deleted'], 
+          // where: { deleted: false }
+        },
+        {
+          model: Account, 
+          as: 'toAccount', 
+          attributes: ['id', 'title', 'balance', 'deleted'], 
+          // where: { deleted: false }
+        },
+        {
+          model: Category, 
+          as: 'category', 
+          attributes: ['id', 'title', 'deleted'], 
+          // where: { deleted: false }
+        },
+      ],
+      offset,
+      limit,
     })
 
-    const { limit, offset, rows } = allTransactions;
-    console.log("ROOWS => ", rows);
+    const { rows, count } = allTransactions;
+
     res.json({
-      transactions: allTransactions,
-      limit,
+      transactions: rows,
+      count,
+      limit, 
       offset
     })
 
   } catch (error) {
+    console.log('errrrrrr >> ', error);
     res.json({ error })
   }
 }

@@ -9,7 +9,6 @@ export const createOne = async(req, res) => {
         const userId = req.user_id;
         const { title, balance } = req.body;
         const payload = { title, balance, userId };
-
         const account = await Account.create(payload);
 
         res.status(200).json({ account });
@@ -20,7 +19,6 @@ export const createOne = async(req, res) => {
         ) {
             res.json({ errors: formatValidationErrors(error.errors) });
         } else {
-            console.log(error);
             res.status(500).json({ msg: "Smth went wrong" });
         }
     }
@@ -39,7 +37,6 @@ export const updateOne = async(req, res) => {
         });
 
         res.status(200).json({ account: updatedAccount });
-
     } catch (error) {
         res.status(400).json({ error });
     }

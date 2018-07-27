@@ -8,11 +8,7 @@ export const createOne = async (req, res) => {
   try {
     const userId = req.user_id;
     const { title, type, parentId } = req.body;
-
-    console.log('req body on create Cat ', req.body);
-
     const payload = { title, userId, type, parentId };
-
     const category = await Category.create(payload);
 
     res.status(200).json({ category });
@@ -23,7 +19,6 @@ export const createOne = async (req, res) => {
     ) {
       res.json({ errors: formatValidationErrors(error.errors) });
     } else {
-      console.log(error);
       res.status(500).json({ msg: "Smth went wrong" });
     }
   }
@@ -62,8 +57,6 @@ export const getAll = async (req, res) => {
 
   try {
     const categories = await Category.findAll({ where: { userId, deleted: false } });
-
-    // console.log('get all -> ', categories);
 
     res.status(200).json({ categories });
   } catch ({ error }) {

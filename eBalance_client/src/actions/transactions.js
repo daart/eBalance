@@ -8,22 +8,24 @@ import {
   TRANSACTION_GET,
 } from './types.js';
 
-export const getAll = () => async dispatch => {
-  const apiResponse = await axios.get('http://localhost:2345/api/transactions');
-  const { transactions } = apiResponse.data;
-  const { rows, count } = transactions;
+export const getAll = (pageNum = 1) => async dispatch => {
+  // const apiResponse = await axios.get('http://localhost:2345/api/transactions');
+  // const apiResponse = await axios.get(`http://localhost:2345/api/transactions?page=${pageNum}`);
+  const apiResponse = await axios.get(`http://localhost:2345/api/transactions?page=` + +pageNum);
 
-  console.log('transactions Thunk ! --=->', transactions);
+  const { transactions, count } = apiResponse.data;
+
+  console.log('transactions Thunk ! --=->', transactions, ' count -> ', count);
   
   dispatch({ 
     type: TRANSACTIONS_GET_ALL, 
     payload: {
-      rows,
+      rows: transactions,
       count
     }
   });
 
-  return Promise.resolve();
+  return Promise.resolve(transactions);
 }
 
 export const deleteOne = (id) => async dispatch => {
@@ -39,9 +41,13 @@ export const deleteOne = (id) => async dispatch => {
   }
 }
 
-export const createOne = (transaction) => ({
-  type: TRANSACTION_CREATE, payload: transaction
-});
+export const createOne = (transaction) => {
+  console.log(transaction);
+
+  return {
+    type: TRANSACTION_CREATE, payload: transaction
+  }
+};
 
 export const getOne = (id) => ({
   type: TRANSACTION_GET,

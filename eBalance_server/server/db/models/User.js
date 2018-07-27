@@ -54,26 +54,6 @@ export default (sequelize, DataTypes) => {
       }
     }
   );
-
-  // User.associate = (models) => {
-  //   User.hasMany(
-  //     models.Account, {
-  //       foreignKey: {
-  //         name: 'userId',
-  //         field: 'user_id',
-  //       }
-  //     }
-  //   );
-    
-  //   User.hasMany(
-  //     models.Category, {
-  //       foreignKey: {
-  //         name: 'userId',
-  //         field: 'user_id',
-  //       }
-  //     }
-  //   );
-  // }
   
   return User;
 };

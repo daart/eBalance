@@ -28,8 +28,8 @@ export default (sequelize, DataTypes) => {
   Transaction.associate = (models) => {
     Transaction.belongsTo(models.User)
     Transaction.belongsTo(models.Category)
-    Transaction.belongsTo(models.Account, { foreignKey: "fromId", as: "from" })
-    Transaction.belongsTo(models.Account, { foreignKey: "toId", as: "to" });
+    Transaction.belongsTo(models.Account, { foreignKey: "fromId", as: "fromAccount" })
+    Transaction.belongsTo(models.Account, { foreignKey: "toId", as: "toAccount" });
   }
 
   Transaction.prototype.execTransaction = async function (accountModel) {

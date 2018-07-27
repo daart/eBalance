@@ -59,7 +59,6 @@ export const register = async (req, res) => {
     ) {
       res.json({ errors: formatValidationErrors(error.errors) });
     } else {
-      console.log(error);
       res.status(500).json({ msg: "Smth went wrong" });
     }
   }
