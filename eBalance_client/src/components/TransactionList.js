@@ -1,10 +1,10 @@
-import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
-import { List, Button } from 'semantic-ui-react';
-import { withRouter } from 'react-router-dom';
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
+import { List, Button } from "semantic-ui-react";
+import { withRouter } from "react-router-dom";
 
-import { getAll } from './../actions/transactions';
-import TransactionItem from './TransactionItem';
+import { getAll } from "./../actions/transactions";
+import TransactionItem from "./TransactionItem";
 import Modal from "./../common/Modal";
 import TransactionForm from "./TransactionForm";
 
@@ -19,101 +19,75 @@ class TransactionList extends Component {
     super(props);
 
     this.state = {
-      currentPage: 1,
-      currentTransactionsList: [],
-      cachedTransactions: {},
-      isLoading: null,
-    };
+      localTransactions: [],
+      currentPage: 1
+    }
   }
 
-  componentDidMount() {
-    this.loadPage(this.state.currentPage);
+  async componentDidMount() {
+    this.loadMore(this.state.currentPage);
   }
 
-  renderControls = pages => {
-    let { currentPage, isLoading } = this.state;
-    
-    return new Array(pages).fill(null).map((el, i) => (
-      <Button
-        active={ currentPage === i + 1 }
-        loading={ isLoading === i + 1 }
-        onClick={() => {
-          this.loadPage(i + 1)
-        }}
-      >
-        {i + 1}
-      </Button>
-      )
-    );
-  };
-
-  loadPage = async (pageNum) => {
-    let { cachedTransactions } = this.state;
-    const { getAll } = this.props;
-
-    if (cachedTransactions[pageNum]) {
-      this.setState({
-        currentPage: pageNum
-      })
-      return 
-    } 
+  loadMore = async (pageNum) => {
+    let { getAll } = this.props;
+    let { localTransactions } = this.state;
+    let transactionsPack = await getAll(pageNum);
 
     this.setState({
-      isLoading: pageNum
+      localTransactions: [
+        ...localTransactions,
+        ...transactionsPack
+      ],
+      currentPage: pageNum
     })
-
-    let transactionsResponse = await getAll(pageNum);
-    let newStateObj = {
-      currentPage: pageNum,
-      cachedTransactions: {
-        ...cachedTransactions,
-        [pageNum]: transactionsResponse
-      },
-      isLoading: null
-    }
-
-    this.setState(newStateObj);
-  };
+  }
 
   render() {
-    const { total, limit } = this.props;
-    const {
-      currentPage,
-      cachedTransactions,
-      currentTransactionsList,
-    } = this.state;
-    const pages = Math.ceil(total / limit);
-
-    console.log(
-      this.state
-    );
+    const { total } = this.props;
+    const { currentPage, localTransactions } = this.state;
+    const isThereNextPage = localTransactions.length < total;
 
     return (
       <Fragment>
-        @List of TransActions
-        { total && this.renderControls(pages) }
+
+        <Modal
+          modalContent={ TransactionForm }
+          headerContent="Create Transaction"
+          triggerBtnConfig={ createNewTransactionBtnConfig }
+        />
 
         <List>
-          {cachedTransactions[currentPage] && (
-            cachedTransactions[currentPage].map(t => {
-                return (
-                  <List.Item key={t.id}>
-                    <TransactionItem transaction={t} />
-                  </List.Item>
-                );
-              })
-            )
+
+          {
+            localTransactions.length > 0 ? (localTransactions.map(t => {
+              return (
+                <List.Item key={t.id}>
+                  <TransactionItem transaction={t} />
+                </List.Item>
+              )
+            })) : <div>loading</div>
           }
         </List>
+
+        {
+          isThereNextPage && (
+            <Button
+              onClick={() => {
+                this.loadMore(currentPage + 1)
+              }}
+            >
+              Load More
+            </Button>
+          )
+        }
       </Fragment>
-    );
+    )
   }
-}
+};
 
 const mapStateToProps = ({ transactions }) => {
   const { rows, count, limit } = transactions;
-  console.log('transactions :: ', rows, count, limit);
-  
+
   return {
     transactions: rows,
     total: count,
@@ -121,4 +95,4 @@ const mapStateToProps = ({ transactions }) => {
   }
 }
 
-export default withRouter(connect(mapStateToProps, { getAll })(TransactionList));
+export default connect(mapStateToProps, { getAll })(TransactionList);
